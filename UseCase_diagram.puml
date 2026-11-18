@@ -1,0 +1,88 @@
+@startuml UseCase_RS_Sehat_Selalu
+
+!theme plain
+skinparam actorStyle awesome
+
+' Actors
+actor "Admin" as admin
+actor "Dokter" as dokter  
+actor "Pasien" as pasien
+
+' System boundary
+rectangle "Sistem RS Sehat Selalu" {
+  
+  ' Use cases for Admin
+  usecase "Mengelola Data Dokter" as UC1
+  usecase "Mengelola Jadwal Dokter" as UC2
+  usecase "Melihat Data Booking" as UC3
+  usecase "Mengelola Rawat Inap" as UC4
+  usecase "Mengelola Pembayaran" as UC5
+  usecase "Melihat Riwayat Diagnosa" as UC6
+  usecase "Mengelola Pengguna" as UC7
+  usecase "Dashboard Security" as UC8
+  
+  ' Use cases for Dokter
+  usecase "Login Dokter" as UC9
+  usecase "Melihat Jadwal Praktek" as UC10
+  usecase "Melihat Daftar Booking" as UC11
+  usecase "Mencatat Pemeriksaan" as UC12
+  usecase "Mengelola Pasien Rawat Inap" as UC13
+  
+  ' Use cases for Pasien
+  usecase "Registrasi Akun" as UC14
+  usecase "Login Pasien" as UC15
+  usecase "Booking Janji Dokter" as UC16
+  usecase "Melihat Riwayat Medis" as UC17
+  usecase "Melihat Tagihan" as UC18
+  
+  ' Common use cases
+  usecase "Ubah Password" as UC19
+  usecase "Logout" as UC20
+}
+
+' Admin relationships
+admin --> UC1
+admin --> UC2
+admin --> UC3
+admin --> UC4
+admin --> UC5
+admin --> UC6
+admin --> UC7
+admin --> UC8
+admin --> UC19
+admin --> UC20
+
+' Dokter relationships
+dokter --> UC9
+dokter --> UC10
+dokter --> UC11
+dokter --> UC12
+dokter --> UC13
+dokter --> UC19
+dokter --> UC20
+
+' Pasien relationships
+pasien --> UC14
+pasien --> UC15
+pasien --> UC16
+pasien --> UC17
+pasien --> UC18
+pasien --> UC19
+pasien --> UC20
+
+' Include relationships
+UC16 ..> UC15 : <<include>>
+UC17 ..> UC15 : <<include>>
+UC18 ..> UC15 : <<include>>
+UC12 ..> UC11 : <<include>>
+UC13 ..> UC9 : <<include>>
+
+' Extend relationships
+UC8 ..> UC7 : <<extend>>
+UC5 ..> UC18 : <<extend>>
+
+note right of UC14 : "Pasien baru dapat\nmendaftar akun"
+note right of UC16 : "Memerlukan jadwal\ndokter yang tersedia"
+note right of UC12 : "Hasil pemeriksaan\ntersimpan di riwayat"
+
+@enduml

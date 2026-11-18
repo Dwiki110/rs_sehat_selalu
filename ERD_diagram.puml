@@ -1,0 +1,79 @@
+@startuml ERD_RS_Sehat_Selalu
+
+!define ENTITY(name,desc) class name as "desc" << (E,#FFAAAA) >>
+!define ATTRIBUTE(name) + name
+
+' Entities
+ENTITY(users, "Users\n(Admin & Pasien)")
+users : ATTRIBUTE(id) : INT [PK]
+users : ATTRIBUTE(username) : VARCHAR(50) [UNIQUE]
+users : ATTRIBUTE(password) : VARCHAR(100)
+users : ATTRIBUTE(role) : ENUM('admin','pasien')
+
+ENTITY(dokter, "Dokter")
+dokter : ATTRIBUTE(id) : INT [PK]
+dokter : ATTRIBUTE(username) : VARCHAR(50)
+dokter : ATTRIBUTE(password) : VARCHAR(50)
+dokter : ATTRIBUTE(nama) : VARCHAR(100)
+
+ENTITY(dokter_jadwal, "Jadwal Dokter")
+dokter_jadwal : ATTRIBUTE(id) : INT [PK]
+dokter_jadwal : ATTRIBUTE(dokter) : VARCHAR(50) [FK]
+dokter_jadwal : ATTRIBUTE(hari) : VARCHAR(20)
+dokter_jadwal : ATTRIBUTE(jam) : VARCHAR(20)
+
+ENTITY(booking, "Booking Janji")
+booking : ATTRIBUTE(id) : INT [PK]
+booking : ATTRIBUTE(pasien) : VARCHAR(100) [FK]
+booking : ATTRIBUTE(dokter) : VARCHAR(100) [FK]
+booking : ATTRIBUTE(tanggal) : DATE
+booking : ATTRIBUTE(hari) : VARCHAR(20)
+booking : ATTRIBUTE(jam) : VARCHAR(20)
+booking : ATTRIBUTE(keluhan) : VARCHAR(255)
+
+ENTITY(pemeriksaan, "Pemeriksaan")
+pemeriksaan : ATTRIBUTE(id) : INT [PK]
+pemeriksaan : ATTRIBUTE(pasien) : VARCHAR(100) [FK]
+pemeriksaan : ATTRIBUTE(dokter) : VARCHAR(100) [FK]
+pemeriksaan : ATTRIBUTE(diagnosa) : TEXT
+pemeriksaan : ATTRIBUTE(obat) : TEXT
+pemeriksaan : ATTRIBUTE(tanggal) : DATE
+
+ENTITY(rawat_inap, "Rawat Inap")
+rawat_inap : ATTRIBUTE(id) : INT [PK]
+rawat_inap : ATTRIBUTE(pasien) : VARCHAR(100) [FK]
+rawat_inap : ATTRIBUTE(dokter) : VARCHAR(100) [FK]
+rawat_inap : ATTRIBUTE(alasan) : TEXT
+rawat_inap : ATTRIBUTE(status) : VARCHAR(50)
+rawat_inap : ATTRIBUTE(tanggal) : TIMESTAMP
+
+ENTITY(pembayaran, "Pembayaran")
+pembayaran : ATTRIBUTE(id) : INT [PK]
+pembayaran : ATTRIBUTE(pasien) : VARCHAR(50) [FK]
+pembayaran : ATTRIBUTE(jumlah) : INT
+pembayaran : ATTRIBUTE(keterangan) : TEXT
+pembayaran : ATTRIBUTE(tanggal) : DATE
+
+ENTITY(riwayat, "Riwayat Medis")
+riwayat : ATTRIBUTE(id) : INT [PK]
+riwayat : ATTRIBUTE(pasien) : VARCHAR(50) [FK]
+riwayat : ATTRIBUTE(dokter) : VARCHAR(100) [FK]
+riwayat : ATTRIBUTE(tanggal) : DATE
+riwayat : ATTRIBUTE(diagnosa) : TEXT
+
+' Relationships
+dokter ||--o{ dokter_jadwal : "memiliki"
+users ||--o{ booking : "membuat"
+dokter ||--o{ booking : "melayani"
+users ||--o{ pemeriksaan : "diperiksa"
+dokter ||--o{ pemeriksaan : "memeriksa"
+users ||--o{ rawat_inap : "dirawat"
+dokter ||--o{ rawat_inap : "merawat"
+users ||--o{ pembayaran : "membayar"
+users ||--o{ riwayat : "memiliki"
+dokter ||--o{ riwayat : "mencatat"
+
+note top of users : "Role: admin atau pasien"
+note top of rawat_inap : "Status: Menunggu, Disetujui, Ditolak"
+
+@enduml
